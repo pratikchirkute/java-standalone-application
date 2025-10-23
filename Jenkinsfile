@@ -23,13 +23,6 @@ pipeline {
       
         stage('Run Application') {
             steps {
-                // Changed 'sh' to 'bat' for Windows environment
-                // To run the app in the background on Windows, use 'start /B'
-                // Or, better for a Jenkins pipeline, run it normally and end the step
-                bat 'java -jar target/java-standalone-application-1.0-SNAPSHOT.jar' 
-                
-                // You may not need a sleep command here unless a subsequent step relies on the app running
-                // bat 'timeout /t 5' 
 				
                 echo "Application started (or step executed)."
             }

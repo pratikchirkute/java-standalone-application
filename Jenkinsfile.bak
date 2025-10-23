@@ -15,26 +15,33 @@ pipeline {
         }
         
         stage('Build') {
-            steps {                
-                sh 'mvn clean install' 
+            steps {
+                // Changed 'sh' to 'bat' for Windows environment
+                bat 'mvn clean install' 
             }
         }
-        
+      
         stage('Run Application') {
             steps {
-                //sh 'java -jar target/java-standalone-application-1.0-SNAPSHOT.jar &' 
+                // Changed 'sh' to 'bat' for Windows environment
+                // To run the app in the background on Windows, use 'start /B'
+                // Or, better for a Jenkins pipeline, run it normally and end the step
+                bat 'java -jar target/java-standalone-application-1.0-SNAPSHOT.jar' 
                 
-                //sh 'sleep 5' 
+                // You may not need a sleep command here unless a subsequent step relies on the app running
+                // bat 'timeout /t 5' 
 				
-                echo "Application started in background."
+                echo "Application started (or step executed)."
             }
         }
         
         stage('Test') {
             steps {
                 // Run the tests
-                sh 'mvn test'
+                // Changed 'sh' to 'bat' for Windows environment
+                bat 'mvn test'
             }
+           
             post {
                 always {
                     junit 'target/surefire-reports/*.xml'
