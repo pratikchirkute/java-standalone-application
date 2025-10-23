@@ -1,37 +1,34 @@
 pipeline {
-    agent any
-    
-    // KEEP THIS REMOVED until the pipeline runs successfully
-    /*
+    // CHANGE 'agent any' to 'agent { label 'master' }'
+    agent { label 'master' } 
+
     tools {
         jdk 'JDK17'
         maven 'Maven3'
     }
-    */
 
     stages {
         stage('Checkout') {
             steps {
-                echo "Source code checked out." 
+                echo "Source code checked out." // This MUST execute now
             }
         }
         
         stage('Build & Test') { 
             steps {                
-                // This command will fail because Maven isn't on the PATH, but it should START
+                // Use 'bat' for Windows shell execution
                 bat 'mvn clean install' 
             }
             post {
                 always {
-                    // Temporarily exclude JUnit to prevent failure if mvn fails to create reports
-                    // junit 'target/surefire-reports/*.xml' 
+                    junit 'target/surefire-reports/*.xml' 
                 }
             }
         }
        
         stage('Run Application') {
             steps {
-                // This command will also fail, but the stage should START
+                // Use 'bat' for Windows shell execution
                 bat 'java -cp target/java-standalone-application-1.0-SNAPSHOT.jar com.expertszen.App'
             }
         }
