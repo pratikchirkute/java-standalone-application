@@ -1,6 +1,7 @@
 pipeline {
     agent any
 
+    // These names must match the tool configuration from Step 1
     tools {
         jdk 'JDK17'
         maven 'Maven3'
@@ -9,27 +10,28 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                // This line will now execute after the tool path is fixed
                 echo "Source code checked out."
             }
         }
         
-        // Use 'bat' instead of 'sh' for Windows agents
+        // COMBINED STAGE to fix the 'No test report files found' error
         stage('Build & Test') { 
             steps {                
-                // CRITICAL CHANGE: using 'bat'
-                bat 'mvn clean install'
+                // CRITICAL FIX for Windows agent: Use 'bat' instead of 'sh'
+                bat 'mvn clean install' 
             }
             post {
                 always {
-                    // This now reliably finds the reports generated in the steps block.
+                    // Publish reports immediately after they are generated
                     junit 'target/surefire-reports/*.xml' 
                 }
             }
         }
        
         stage('Run Application') {
-            // CRITICAL CHANGE: using 'bat'
             steps {
+                // CRITICAL FIX for Windows agent: Use 'bat' instead of 'sh'
                 bat 'java -cp target/java-standalone-application-1.0-SNAPSHOT.jar com.expertszen.App'
             }
         }
