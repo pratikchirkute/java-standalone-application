@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    // These names must match the tool configuration from Step 1
-    tools {
-        jdk 'JDK17'
-        maven 'Maven3'
-    }
 
     stages {
         stage('Checkout') {
