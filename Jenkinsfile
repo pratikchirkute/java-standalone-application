@@ -1,6 +1,6 @@
 pipeline {
     // CHANGE 'agent any' to 'agent { label 'master' }'
-    agent any
+    agent none
 
 
     stages {
