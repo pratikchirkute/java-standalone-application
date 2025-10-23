@@ -13,23 +13,24 @@ pipeline {
             }
         }
         
-        // **REPLACE** the old 'Build' and 'Test' stages with this:
+        // Use 'bat' instead of 'sh' for Windows agents
         stage('Build & Test') { 
             steps {                
-                // This command runs the compilation, tests, and packaging.
-                sh 'mvn clean install'
+                // CRITICAL CHANGE: using 'bat'
+                bat 'mvn clean install'
             }
             post {
                 always {
-                    // Publish reports immediately after they are generated.
+                    // This now reliably finds the reports generated in the steps block.
                     junit 'target/surefire-reports/*.xml' 
                 }
             }
         }
        
         stage('Run Application') {
+            // CRITICAL CHANGE: using 'bat'
             steps {
-                sh 'java -cp target/java-standalone-application-1.0-SNAPSHOT.jar com.expertszen.App'
+                bat 'java -cp target/java-standalone-application-1.0-SNAPSHOT.jar com.expertszen.App'
             }
         }
     }
