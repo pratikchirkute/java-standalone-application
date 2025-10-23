@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-    // Ensure 'JDK17' and 'Maven3' are configured in Manage Jenkins > Global Tool Configuration
     tools {
         jdk 'JDK17'
         maven 'Maven3'
@@ -14,27 +13,22 @@ pipeline {
             }
         }
         
-        stage('Build') {
+        stage('Build & Test') { // Combine stages
             steps {                
+                // This command runs the compilation, tests, and packaging.
                 sh 'mvn clean install'
-            }
-        }
-        
-        stage('Run Application') {
-            steps {
-                sh 'java -cp target/java-standalone-application-1.0-SNAPSHOT.jar com.expertszen.App'
-            }
-        }
-        
-        stage('Test') {
-            steps {
-                // Run the tests
-                sh 'mvn test'
             }
             post {
                 always {
-                    junit 'target/surefire-reports/*.xml'
+                    // Publish reports immediately after the command that creates them.
+                    junit 'target/surefire-reports/*.xml' 
                 }
+            }
+        }
+       
+        stage('Run Application') {
+            steps {
+                sh 'java -cp target/java-standalone-application-1.0-SNAPSHOT.jar com.expertszen.App'
             }
         }
     }
