@@ -16,17 +16,13 @@ pipeline {
         
         stage('Build') {
             steps {                
-                sh 'mvn clean package -DskipTests' 
+                sh 'mvn clean install'
             }
         }
         
         stage('Run Application') {
             steps {
-                sh 'java -jar target/java-standalone-application-1.0-SNAPSHOT.jar &' 
-                
-                sh 'sleep 5' 
-				
-                echo "Application started in background."
+                sh 'java -cp target/java-standalone-application-1.0-SNAPSHOT.jar com.expertszen.App'
             }
         }
         
@@ -38,8 +34,6 @@ pipeline {
             post {
                 always {
                     junit 'target/surefire-reports/*.xml'
-                    
-                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
                 }
             }
         }
