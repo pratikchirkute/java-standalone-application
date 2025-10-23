@@ -13,14 +13,15 @@ pipeline {
             }
         }
         
-        stage('Build & Test') { // Combine stages
+        // **REPLACE** the old 'Build' and 'Test' stages with this:
+        stage('Build & Test') { 
             steps {                
                 // This command runs the compilation, tests, and packaging.
                 sh 'mvn clean install'
             }
             post {
                 always {
-                    // Publish reports immediately after the command that creates them.
+                    // Publish reports immediately after they are generated.
                     junit 'target/surefire-reports/*.xml' 
                 }
             }
